@@ -1,5 +1,3 @@
-module ZMQ
-  module FFICore
-    VERSION = "1.0.0"
-  end
+module LibZMQ
+  VERSION = "1.0.0"
 end

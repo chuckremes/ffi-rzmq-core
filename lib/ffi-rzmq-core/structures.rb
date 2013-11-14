@@ -94,5 +94,3 @@ module LibZMQ
     end
   end # class EventData
 end
-
-end
