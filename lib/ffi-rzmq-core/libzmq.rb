@@ -39,7 +39,7 @@ module LibZMQ
 
   # Context and misc api
   #
-  # @blocking = true is a hint to FFI that the following (and only the following)
+  # The `:blocking` option is a hint to FFI that the following (and only the following)
   # function may block, therefore it should release the GIL before calling it.
   # This can aid in situations where the function call will/may block and another
   # thread within the lib may try to call back into the ruby runtime. Failure to
@@ -80,6 +80,12 @@ module LibZMQ
   attach_function :zmq_bind, [:pointer, :string], :int, :blocking => true
   attach_function :zmq_connect, [:pointer, :string], :int, :blocking => true
   attach_function :zmq_close, [:pointer], :int, :blocking => true
+  attach_function :zmq_unbind, [:pointer, :string], :int, :blocking => true
+  attach_function :zmq_disconnect, [:pointer, :string], :int, :blocking => true
+  attach_function :zmq_recvmsg, [:pointer, :pointer, :int], :int, :blocking => true
+  attach_function :zmq_recv, [:pointer, :pointer, :size_t, :int], :int, :blocking => true
+  attach_function :zmq_sendmsg, [:pointer, :pointer, :int], :int, :blocking => true
+  attach_function :zmq_send, [:pointer, :pointer, :size_t, :int], :int, :blocking => true
 
   # Device API
   attach_function :zmq_proxy, [:pointer, :pointer, :pointer], :int, :blocking => true
@@ -90,11 +96,4 @@ module LibZMQ
   # Monitoring API
   attach_function :zmq_socket_monitor, [:pointer, :pointer, :int], :int, :blocking => true
 
-  # Socket API
-  attach_function :zmq_unbind, [:pointer, :string], :int, :blocking => true
-  attach_function :zmq_disconnect, [:pointer, :string], :int, :blocking => true
-  attach_function :zmq_recvmsg, [:pointer, :pointer, :int], :int, :blocking => true
-  attach_function :zmq_recv, [:pointer, :pointer, :size_t, :int], :int, :blocking => true
-  attach_function :zmq_sendmsg, [:pointer, :pointer, :int], :int, :blocking => true
-  attach_function :zmq_send, [:pointer, :pointer, :size_t, :int], :int, :blocking => true
 end
