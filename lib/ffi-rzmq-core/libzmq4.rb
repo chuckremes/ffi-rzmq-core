@@ -10,4 +10,8 @@ module LibZMQ
   attach_function :zmq_z85_encode,   [:pointer, :pointer, :size_t], :string, :blocking => true
   attach_function :zmq_z85_decode,   [:pointer, :string],           :pointer, :blocking => true
 
+  # Requires ZMQ compiled with libsodium
+  # Will return -1 with errno set to ENOSUP otherwise
+  attach_function :zmq_curve_keypair, [:pointer, :pointer], :int, :blocking => true
+
 end

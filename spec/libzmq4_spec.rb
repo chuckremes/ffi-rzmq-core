@@ -19,5 +19,9 @@ if LibZMQ.version4?
       end
     end
 
+    it "exposes CURVE security methods" do
+      expect(LibZMQ).to respond_to(:zmq_curve_keypair)
+    end
+
   end
 end
