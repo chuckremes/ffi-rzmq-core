@@ -2,12 +2,12 @@ module LibZMQ
 
   # Used for casting pointers back to the msg_t struct
   #
-  class Msg < FFI::Struct
+  class Message < FFI::Struct
     layout :content,  :pointer,
       :flags,    :uint8,
       :vsm_size, :uint8,
       :vsm_data, [:uint8, 30]
-  end # class Msg
+  end
 
 
   # Create the basic mapping for the poll_item_t structure so we can

@@ -8,8 +8,8 @@ module LibC
   find_type(:size_t) rescue typedef(:ulong, :size_t)
 
   # memory allocators
-  attach_function :malloc, [:size_t], :pointer
-  attach_function :free, [:pointer], :void
+  attach_function :malloc, [:size_t],  :pointer
+  attach_function :free,   [:pointer], :void
 
   # get a pointer to the free function; used for ZMQ::Message deallocation
   Free = library.find_symbol('free')
