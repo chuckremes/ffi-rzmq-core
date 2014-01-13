@@ -10,9 +10,16 @@ module LibZMQ
     inside_gem = File.join(File.dirname(__FILE__), '..', '..', 'ext')
     local_path = FFI::Platform::IS_WINDOWS ? ENV['PATH'].split(';') : ENV['PATH'].split(':')
 
+    homebrew_prefix = `brew --prefix`.chomp
+    homebrew_path   = if $?.success?
+                        "#{homebrew_prefix}/lib"
+                      else
+                        '/usr/local/homebrew/lib'
+                      end
+
     # Search for libzmq in the following order...
     ZMQ_LIB_PATHS = ([inside_gem] + local_path + [
-                       '/usr/local/lib', '/opt/local/lib', '/usr/local/homebrew/lib', '/usr/lib64'
+                       '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64'
     ]).map{|path| "#{path}/libzmq.#{FFI::Platform::LIBSUFFIX}"}
     ffi_lib(ZMQ_LIB_PATHS + %w{libzmq})
 
