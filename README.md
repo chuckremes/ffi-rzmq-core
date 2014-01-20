@@ -11,3 +11,17 @@ wrapping code, they can just pull in this gem and build a more idiomatic library
 basic definitions.
 
 See [ffi-rzmq]
+
+### Development
+
+As this library supports both ZeroMQ 3.2+ and ZeroMQ 4.0+ it's common to have to swap out
+which version of ZeroMQ is installed to test out various features (say, 4.0 for security).
+
+With Homebrew on Mac OS X this is easy enough. The main ZeroMQ formula installs 4.0. To get
+version 3.2 pull in the homebrew-versions using:
+
+  brew tap homebrew/versions
+
+and install version 3.2:
+
+  brew install zeromq32
