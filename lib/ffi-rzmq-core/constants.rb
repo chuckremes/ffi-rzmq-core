@@ -108,7 +108,7 @@ module ZMQ
   IO_THREADS       = 1
   MAX_SOCKETS      = 2
   IO_THREADS_DFLT  = 1
-  MAX_SOCKETS_DFLT = 1024
+  MAX_SOCKETS_DFLT = 1023
 
   #  I/O multiplexing
   POLL    = 1
