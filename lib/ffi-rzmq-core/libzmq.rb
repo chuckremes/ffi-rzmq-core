@@ -14,7 +14,7 @@ module LibZMQ
     homebrew_path = nil
 
     begin
-      stdout, status = Open3.capture2("brew", "--prefix")
+      stdout, stderr, status = Open3.capture3("brew", "--prefix")
       homebrew_path  = if status.success?
                         "#{stdout.chomp}/lib"
                       else
