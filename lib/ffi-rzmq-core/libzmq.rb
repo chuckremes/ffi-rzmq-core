@@ -13,6 +13,9 @@ module LibZMQ
     local_path = FFI::Platform::IS_WINDOWS ? ENV['PATH'].split(';') : ENV['PATH'].split(':')
     homebrew_path = nil
 
+    # RUBYOPT set by RVM breaks 'brew' so we need to unset it.
+    rubyopt = ENV.delete('RUBYOPT')
+
     begin
       stdout, stderr, status = Open3.capture3("brew", "--prefix")
       homebrew_path  = if status.success?
@@ -23,6 +26,9 @@ module LibZMQ
     rescue
       # Homebrew doesn't exist
     end
+
+    # Restore RUBYOPT after executing 'brew' above.
+    ENV['RUBYOPT'] = rubyopt
 
     # Search for libzmq in the following order...
     ZMQ_LIB_PATHS = ([inside_gem] + local_path + [
