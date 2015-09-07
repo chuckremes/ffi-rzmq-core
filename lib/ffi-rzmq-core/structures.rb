@@ -5,7 +5,7 @@ module LibZMQ
   class Message < FFI::Struct
     layout :content,  :pointer,
       :flags,    :uint8,
-      :vsm_size, :uint8,
+      :vsm_size, :ulong_long,
       :vsm_data, [:uint8, 30]
   end
 
