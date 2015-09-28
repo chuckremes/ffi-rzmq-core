@@ -2,13 +2,23 @@ require 'spec_helper'
 
 describe LibZMQ do
 
-  it "wraps the msg_t struct as Message" do
-    message = LibZMQ::Message.new
+  if LibZMQ.version4? && LibZMQ.version[:minor] > 0
 
-    expect(message[:content]).to_not be_nil
-    expect(message[:flags]).to_not be_nil
-    expect(message[:vsm_size]).to_not be_nil
-    expect(message[:vsm_data]).to_not be_nil
+    it "the msg_t struct wrapped in Message is 64 bytes" do
+      LibZMQ::Message.size == 64
+    end
+    
+  else
+    
+    it "wraps the msg_t struct as Message" do
+      message = LibZMQ::Message.new
+  
+      expect(message[:content]).to_not be_nil
+      expect(message[:flags]).to_not be_nil
+      expect(message[:vsm_size]).to_not be_nil
+      expect(message[:vsm_data]).to_not be_nil
+    end
+    
   end
 
   it "wraps poll_item_t in a PollItem" do
