@@ -5,7 +5,7 @@ describe LibZMQ do
   if LibZMQ.version4? && LibZMQ.version[:minor] > 0
 
     it "the msg_t struct wrapped in Message is 64 bytes" do
-      LibZMQ::Message.size == 64
+      expect(LibZMQ::Message.size).to be == 64
     end
     
   else
