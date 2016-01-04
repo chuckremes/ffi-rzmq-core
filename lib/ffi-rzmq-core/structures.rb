@@ -3,19 +3,14 @@ module LibZMQ
   # Used for casting pointers back to the msg_t struct
   #
   class Message < FFI::Struct
-    layout :content,  :pointer,
-      :flags,    :uint8,
-      :vsm_size, :uint8,
-      :vsm_data, [:uint8, 30]
-  end
-  
-  if LibZMQ.version[:major] >= 4 && LibZMQ.version[:minor] > 0
-    
-    # zmq_msg_t was expanded to 64 bytes as of version 4.1.0
-    class Message < FFI::Struct
-      layout :content, :ulong_long
+    if LibZMQ.version[:major] >= 4 && LibZMQ.version[:minor] > 0
+      layout :content,  [:uint8, 64]
+    else
+      layout :content,  :pointer,
+             :flags,    :uint8,
+             :vsm_size, :uint8,
+             :vsm_data, [:uint8, 30]
     end
-    
   end
 
 
