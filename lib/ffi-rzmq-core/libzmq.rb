@@ -1,4 +1,5 @@
 require 'open3'
+require 'rbconfig'
 
 # Wraps the libzmq library and attaches to the functions that are
 # common across the 3.2.x+ and 4.x APIs.
@@ -11,6 +12,7 @@ module LibZMQ
     # to the usual system paths
     inside_gem = File.join(File.dirname(__FILE__), '..', '..', 'ext')
     local_path = FFI::Platform::IS_WINDOWS ? ENV['PATH'].split(';') : ENV['PATH'].split(':')
+    rbconfig_path = RbConfig::CONFIG["libdir"]
     homebrew_path = nil
 
     # RUBYOPT set by RVM breaks 'brew' so we need to unset it.
@@ -31,7 +33,7 @@ module LibZMQ
     ENV['RUBYOPT'] = rubyopt
 
     # Search for libzmq in the following order...
-    ZMQ_LIB_PATHS = ([inside_gem] + local_path + [
+    ZMQ_LIB_PATHS = ([inside_gem] + local_path + [rbconfig_path] + [
                        '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64'
     ]).compact.map{|path| "#{path}/libzmq.#{FFI::Platform::LIBSUFFIX}"}
     ffi_lib(ZMQ_LIB_PATHS + %w{libzmq})
