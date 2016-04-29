@@ -1,23 +1,51 @@
 module LibZMQ
 
-  # Used for casting pointers back to the msg_t struct
-  #
-  class Message < FFI::Struct
-    layout :content,  :pointer,
-      :flags,    :uint8,
-      :vsm_size, :uint8,
-      :vsm_data, [:uint8, 30]
-  end
-  
-  if LibZMQ.version[:major] >= 4 && LibZMQ.version[:minor] > 0
-    
-    # zmq_msg_t was expanded to 64 bytes as of version 4.1.0
-    class Message < FFI::Struct
-      layout :content, :ulong_long
-    end
-    
+  def self.version_number
+    10000 * version[:major] + 100 * version[:minor] + version[:patch]
   end
 
+  def self.version_string
+    "%d.%d.%d" % version.values_at(:major, :minor, :patch)
+  end
+
+  raise "zmq library version not supported: #{version_string}" if version_number < 030200
+
+  # here are the typedefs for zmsg_msg_t for all known releases of libzmq
+  # grep 'typedef struct zmq_msg_t'  */include/zmq.h
+  # zeromq-3.2.2/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-3.2.3/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-3.2.4/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-3.2.5/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.0/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.1/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.2/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.3/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.4/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.5/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.6/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.0.7/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [32];} zmq_msg_t;
+  # zeromq-4.1.0/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [48];} zmq_msg_t;
+  # zeromq-4.1.1/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [64];} zmq_msg_t;
+  # zeromq-4.1.2/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [64];} zmq_msg_t;
+  # zeromq-4.1.3/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [64];} zmq_msg_t;
+  # zeromq-4.1.4/include/zmq.h:typedef struct zmq_msg_t {unsigned char _ [64];} zmq_msg_t;
+  # libzmq/include/zmq.h: typedef union zmq_msg_t {unsigned char _ [64]; void *p; } zmq_msg_t;
+
+  def self.size_of_zmq_msg_t
+    if version_number < 040100
+      32
+    elsif version_number < 040101
+      48
+    else
+      64
+    end
+  end
+
+  # Declare Message with correct size and alignment
+  class Message < FFI::Union
+    layout :'_', [:uint8, LibZMQ.size_of_zmq_msg_t],
+       :p, :pointer
+  end
 
   # Create the basic mapping for the poll_item_t structure so we can
   # access those fields via Ruby.
