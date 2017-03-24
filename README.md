@@ -10,6 +10,9 @@ hoping this encourages other library writers to create their own. Rather than du
 wrapping code, they can just pull in this gem and build a more idiomatic library around the
 basic definitions.
 
+As of zeromq 4.2.x, this library does not yet support the `zmq_atomic_counter_*` functions or many
+of the other newly exposed functions. Pull requests encouraged!
+
 See [ffi-rzmq]
 
 ### Development
