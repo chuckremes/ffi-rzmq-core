@@ -37,6 +37,10 @@ module LibZMQ
     ZMQ_LIB_PATHS = ([inside_gem] + env_path + local_path + [rbconfig_path] + [
                        '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64'
     ]).compact.map{|path| "#{path}/libzmq.#{FFI::Platform::LIBSUFFIX}"}
+
+    # Recent versions of libzmq do not put all symbols into the global namespace so
+    # lazy linking can fail at runtime. Force all symbols to global namespace.
+    ffi_lib_flags :now, :global
     ffi_lib(ZMQ_LIB_PATHS + %w{libzmq})
 
   rescue LoadError
