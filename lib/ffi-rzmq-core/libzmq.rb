@@ -44,12 +44,18 @@ module LibZMQ
     ffi_lib(ZMQ_LIB_PATHS + %w{libzmq})
 
   rescue LoadError
-    if ZMQ_LIB_PATHS.any? {|path|
-      File.file? File.join(path, "libzmq.#{FFI::Platform::LIBSUFFIX}")}
+    # Failed to load the zmq library
+
+    found_libs = ZMQ_LIB_PATHS.find_all {|path| File.file? path }
+    if found_libs.any?
       warn "Unable to load this gem. The libzmq library exists, but cannot be loaded."
-      warn "If this is Windows:"
-      warn "-  Check that you have MSVC runtime installed or statically linked"
-      warn "-  Check that your DLL is compiled for #{FFI::Platform::ADDRESS_SIZE} bit"
+      warn "libzmq library was found at:"
+      warn found_libs.inspect
+      if FFI::Platform::IS_WINDOWS
+        warn "On Windows:"
+        warn "-  Check that you have MSVC runtime installed or statically linked"
+        warn "-  Check that your DLL is compiled for #{FFI::Platform::ADDRESS_SIZE} bit"
+      end
     else
       warn "Unable to load this gem. The libzmq library (or DLL) could not be found."
       warn "If this is a Windows platform, make sure libzmq.dll is on the PATH."
