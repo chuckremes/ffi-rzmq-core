@@ -45,4 +45,27 @@ describe LibZMQ do
     expect(LibZMQ).to respond_to(:zmq_socket_monitor)
   end
 
+  if LibZMQ.version3?
+
+    describe '.terminate_context' do
+      it 'calls the 3.x zmq_ctx_destroy function' do
+        context_dbl = double('context')
+
+        expect(LibZMQ).to receive(:zmq_ctx_destroy).with(context_dbl)
+        LibZMQ.terminate_context(context_dbl)
+      end
+    end
+
+  elsif LibZMQ.version4?
+
+    describe '.terminate_context' do
+      it 'calls the 4.x zmq_ctx_destroy function' do
+        context_dbl = double('context')
+
+        expect(LibZMQ).to receive(:zmq_ctx_term).with(context_dbl)
+        LibZMQ.terminate_context(context_dbl)
+      end
+    end
+
+  end
 end
