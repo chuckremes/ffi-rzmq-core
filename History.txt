@@ -1,0 +1,8 @@
+== 1.0.7
+  * Provide a wrapper function for calling context termination. Zeromq 3.x
+    uses zmq_ctx_destroy to terminate a context. While this function exists
+    in Zeromq 4.x, it is deprecated. For 4.x, we prefer to use zmq_ctx_term.
+    When loading the library, we define a `terminate_context` method on the
+    module which defaults to using the 3.x function call. If the 4.x support
+    loads, then this method is overwritten to use the 4.x function call.
+    
