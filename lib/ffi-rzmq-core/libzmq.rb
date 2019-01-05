@@ -129,4 +129,8 @@ module LibZMQ
   # Monitoring API
   attach_function :zmq_socket_monitor, [:pointer, :pointer, :int], :int, :blocking => true
 
+  # Wrapper function for context termination
+  def self.terminate_context(context)
+    zmq_ctx_destroy(context)
+  end
 end

@@ -14,4 +14,9 @@ module LibZMQ
   # Will return -1 with errno set to ENOSUP otherwise
   attach_function :zmq_curve_keypair, [:pointer, :pointer], :int, :blocking => true
 
+  # Wrapper function for context termination
+  def self.terminate_context(context)
+    zmq_ctx_term(context)
+  end
+
 end
