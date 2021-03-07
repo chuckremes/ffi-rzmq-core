@@ -33,15 +33,23 @@ module LibZMQ
     # Restore RUBYOPT after executing 'brew' above.
     ENV['RUBYOPT'] = rubyopt
 
+    # Major version of libzmq library
+    MAJOR_SONAME_VERSION = '5'
+
     # Search for libzmq in the following order...
     ZMQ_LIB_PATHS = ([inside_gem] + env_path + local_path + [rbconfig_path] + [
                        '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64'
     ]).compact.map{|path| "#{path}/libzmq.#{FFI::Platform::LIBSUFFIX}"}
 
+    # Search for versioned library
+    VERSIONED_ZMQ_LIB_PATHS = ([inside_gem] + env_path + local_path + [rbconfig_path] + [
+                       '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64'
+    ]).compact.map{|path| "#{path}/libzmq.#{FFI::Platform::LIBSUFFIX}.#{MAJOR_SONAME_VERSION}"}
+
     # Recent versions of libzmq do not put all symbols into the global namespace so
     # lazy linking can fail at runtime. Force all symbols to global namespace.
     ffi_lib_flags :now, :global
-    ffi_lib(ZMQ_LIB_PATHS + %w{libzmq})
+    ffi_lib(ZMQ_LIB_PATHS + VERSIONED_ZMQ_LIB_PATHS + %w{libzmq})
 
   rescue LoadError
     # Failed to load the zmq library
