@@ -35,7 +35,7 @@ module LibZMQ
 
     # Search for libzmq in the following order...
     ZMQ_LIB_PATHS = ([inside_gem] + env_path + local_path + [rbconfig_path] + [
-                       '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64'
+                       '/usr/local/lib', '/opt/local/lib', homebrew_path, '/usr/lib64', '/usr/lib'
     ]).compact.map{|path| "#{path}/libzmq.#{FFI::Platform::LIBSUFFIX}"}
 
     # Recent versions of libzmq do not put all symbols into the global namespace so
