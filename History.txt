@@ -1,3 +1,7 @@
+== 1.0.8
+  * Add support for Alpine Linux by searching an additional path for the lib
+  * Add support the versioned library soname
+
 == 1.0.7
   * Provide a wrapper function for calling context termination. Zeromq 3.x
     uses zmq_ctx_destroy to terminate a context. While this function exists
